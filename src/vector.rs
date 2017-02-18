@@ -1,9 +1,9 @@
 extern crate num;
 
 use self::num::Num;
-use std::ops::{Add, Sub, Mul, Div};
+use std::ops::{Add, Sub, Mul};
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Vector3D<T> {
     pub x: T,
     pub y: T,
@@ -16,13 +16,9 @@ impl<T: Num> Vector3D<T> {
     }
 }
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Scalar<T> {
     pub x: T,
-}
-
-pub enum S<T> {
-    S(T),
 }
 
 impl<T: Num> Scalar<T> {
@@ -63,20 +59,26 @@ impl<T: Num + Copy> Mul<Vector3D<T>> for Scalar<T> {
     }
 }
 
-impl<T: Num + Copy> Mul<Vector3D<T>> for S<T> {
-    type Output = Vector3D<T>;
+impl<T: Num + Copy> Mul<T> for Vector3D<T> {
+    type Output = Self;
 
-    fn mul(self, other: Vector3D<T>) -> Self::Output {
-        match self {
-            S::S(x) => Self::Output::new(other.x * x, other.y * x, other.z * x),
-        }
+    fn mul(self, other: T) -> Self::Output {
+        Self::Output::new(self.x * other, self.y * other, self.z * other)
     }
 }
 
-impl<T: Num + Copy> Div<T> for Vector3D<T> {
-    type Output = Self;
+// impl<T: Num + Copy> Mul<Vector3D<T>> for T {
+//     type Output = Vector3D<T>;
+//
+//     fn mul(self, other: Vector3D<T>) -> Self::Output {
+//         Self::Output::new(other.x * self, other.y * self, other.z * self)
+//     }
+// }
 
-    fn div(self, other: T) -> Self::Output {
-        Self::Output::new(self.x / other, self.y / other, self.z / other)
+impl Mul<Vector3D<f64>> for f64 {
+    type Output = Vector3D<f64>;
+
+    fn mul(self, other: Vector3D<f64>) -> Self::Output {
+        Self::Output::new(other.x * self, other.y * self, other.z * self)
     }
 }
