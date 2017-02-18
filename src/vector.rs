@@ -1,6 +1,5 @@
 extern crate num;
 
-use self::num::Num;
 use std::ops::{Add, Sub, Mul};
 
 #[derive(Debug, Copy, Clone)]
@@ -10,7 +9,7 @@ pub struct Vector3D<T> {
     pub z: T,
 }
 
-impl<T: Num> Vector3D<T> {
+impl<T> Vector3D<T> {
     pub fn new(x: T, y: T, z: T) -> Self {
         Self { x: x, y: y, z: z }
     }
@@ -21,13 +20,13 @@ pub struct Scalar<T> {
     pub x: T,
 }
 
-impl<T: Num> Scalar<T> {
+impl<T> Scalar<T> {
     pub fn new(x: T) -> Self {
         Self { x: x }
     }
 }
 
-impl<T: Num> Add for Vector3D<T> {
+impl<T: Copy + Add<T, Output = T>> Add for Vector3D<T> {
     type Output = Self;
 
     fn add(self, other: Self) -> Self::Output {
@@ -35,7 +34,7 @@ impl<T: Num> Add for Vector3D<T> {
     }
 }
 
-impl<T: Num> Sub for Vector3D<T> {
+impl<T: Copy + Sub<T, Output = T>> Sub for Vector3D<T> {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self::Output {
@@ -43,7 +42,7 @@ impl<T: Num> Sub for Vector3D<T> {
     }
 }
 
-impl<T: Num + Copy> Mul<Scalar<T>> for Vector3D<T> {
+impl<T: Copy + Mul<T, Output = T>> Mul<Scalar<T>> for Vector3D<T> {
     type Output = Self;
 
     fn mul(self, other: Scalar<T>) -> Self::Output {
@@ -51,7 +50,7 @@ impl<T: Num + Copy> Mul<Scalar<T>> for Vector3D<T> {
     }
 }
 
-impl<T: Num + Copy> Mul<Vector3D<T>> for Scalar<T> {
+impl<T: Copy + Mul<T, Output = T>> Mul<Vector3D<T>> for Scalar<T> {
     type Output = Vector3D<T>;
 
     fn mul(self, other: Vector3D<T>) -> Self::Output {
@@ -59,7 +58,7 @@ impl<T: Num + Copy> Mul<Vector3D<T>> for Scalar<T> {
     }
 }
 
-impl<T: Num + Copy> Mul<T> for Vector3D<T> {
+impl<T: Copy + Mul<T, Output = T>> Mul<T> for Vector3D<T> {
     type Output = Self;
 
     fn mul(self, other: T) -> Self::Output {
@@ -67,7 +66,7 @@ impl<T: Num + Copy> Mul<T> for Vector3D<T> {
     }
 }
 
-// impl<T: Num + Copy> Mul<Vector3D<T>> for T {
+// impl<T: Copy + Mul<T, Output = T>> Mul<Vector3D<T>> for T {
 //     type Output = Vector3D<T>;
 //
 //     fn mul(self, other: Vector3D<T>) -> Self::Output {
